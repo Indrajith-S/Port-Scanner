@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Building a port scanner</title>
+</head><body><span style="font-size: 12pt"><span style="font-family: JetBrainsMono Nerd Font Mono">#!/bin/python3<br/>
+<br/>
+import sys<br/>
+import socket<br/>
+from datetime import datetime<br/>
+<br/>
+#DEFINE OUR TARGET<br/>
+if len(sys.argv) == 2: #first arguemwnt (here) is scanner.py and second is the ip address itself<br/>
+&#09;target= socket.gethostbyname(sys.argv[1]) #translates hostname to ipv4<br/>
+else:<br/>
+&#09;print("Invalid number of arguements")<br/>
+&#09;print("correct syntax: python3 scanner.py &lt;ip&gt;")<br/>
+&#09;<br/>
+#ADD A PRETTY BANNER<br/>
+print("-"*50)<br/>
+print("Scanning Target: ",target)<br/>
+print("Time Started: ",datetime.now())<br/>
+print("-"*50)<br/>
+<br/>
+<br/>
+try:<br/>
+&#09;for port in range(1,100):<br/>
+&#09;&#09;s=socket.socket(socket.AF_INET, socket.SOCK_STREAM)<br/>
+&#09;&#09;socket.setdefaulttimeout(1)<br/>
+&#09;&#09;result=s.connect_ex((target, port)) #connect_ex is a result checker that gives 1 if error occurs and 0 for no errors.<br/>
+&#09;&#09;if result==0:<br/>
+&#09;&#09;&#09;print(f"Port {port} is open")<br/>
+&#09;&#09;s.close()<br/>
+&#09;&#09;<br/>
+except KeyboardInterrupt:<br/>
+&#09;print("\nExiting Port Scanner")<br/>
+&#09;sys.exit()<br/>
+&#09;<br/>
+except socket.gaierror: #when hostnames can't be resolved<br/>
+&#09;print("Hostname couldn't be resolved")<br/>
+&#09;sys.exit();<br/>
+&#09;<br/>
+except socket.error:<br/>
+&#09;print("Coudln't connect to the server")<br/>
+&#09;sys.exit()<br/>
+<br/>
+<br/>
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------<br/>
+<br/>
+INPUT<br/>
+<br/>
+python3 scanner.py 172.18.176.10<br/>
+<br/>
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------<br/>
+<br/>
+OUPUT<br/>
+<br/>
+--------------------------------------------------<br/>
+Scanning Target: &nbsp;172.18.176.10<br/>
+Time Started: &nbsp;2023-02-04 05:45:39.364553<br/>
+--------------------------------------------------<br/>
+Port 53 is open<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</span></span></body></html>
